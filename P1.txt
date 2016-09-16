@@ -1,0 +1,70 @@
+HAbalone<-read.csv("C:/~abaloneAge.csv")
+attach(HAbalone)
+
+#mean calculation
+mean(length)
+mean(diameter)
+mean(height)
+mean(whole.weight)
+mean(shucked.weight)
+mean(viscera.weight)
+mean(shell.weight)
+mean(rings)
+
+#covariance matrix and correlation
+#lenght vs Diameter
+cov(HAbalone[,c(2,3)])
+#shucked weight vs Rings
+cov(HAbalone[,c(6,9)])
+#lenght vs shucked weight
+cov(HAbalone[,c(2,6)])
+#lenght vs rings 
+cov(HAbalone[,c(2,9)])
+#diameter vs shucked weight
+cov(HAbalone[,c(3,6)])
+#diameter vs rings
+cov(HAbalone[,c(3,9)])
+
+#scatter plot for shucked weight vs shell weight
+plot(shell.weight, shucked.weight, main="Shell weight vs Shucked Weight")
+
+#histograms for all
+hist(length, col = "forestgreen", xlim = c(0,1) ,ylim = c(0,800), main = "Abalone Dataset \n Length", )
+hist(whole.weight, col = "forestgreen", xlim = c(0,3) ,ylim = c(0,300), main = "Abalone Dataset \n whole weight)
+barplot(table(age), col = "forestgreen", ylim = c(0,2500), main = "Abalone Dataset \n Age" )
+
+#histograms for male 
+maledata<-HAbalone[which(HAbalone$sex=='M'),]
+hist(maledata$length, col = "forestgreen", xlim = c(0,1) ,ylim = c(0,800), main = "Abalone Dataset \n Male Length", )
+hist(maledata$whole.weight, col = "forestgreen", xlim = c(0,3) ,ylim = c(0,300), main = "Abalone Dataset \n Male whole weight)
+barplot(table(maledata$age), col = "forestgreen", ylim = c(0,2500), main = "Abalone Dataset \n Male Age" )
+
+#histograms for female 
+femaledata<-HAbalone[which(HAbalone$sex=='F'),]
+hist(femaledata$length, col = "forestgreen", xlim = c(0,1) ,ylim = c(0,800), main = "Abalone Dataset \n Female Length", )
+hist(femaledata$whole.weight, col = "forestgreen", xlim = c(0,3) ,ylim = c(0,300), main = "Abalone Dataset \n Female whole weight)
+barplot(table(femaledata$age), col = "forestgreen", ylim = c(0,2500), main = "Abalone Dataset \n Female Age" )
+
+#whole weight code:
+boxplot(whole.weight[age=='Y'], main=("Abalone Dataset \n Young Abalone"), col = "forestgreen")
+boxplot(whole.weight[age=='M'], main=("Abalone Dataset \n Middle Age Abalone"), col = "forestgreen")
+boxplot(whole.weight[age=='O'], main=("Abalone Dataset \n Old Abalone"), col = "forestgreen")
+boxplot(whole.weight, main=("Abalone Dataset \n All instances Abalone"), col = "forestgreen")
+
+#diameter code:
+boxplot(diameter[age=='Y'], main=("Abalone Dataset \n Young Abalone"), col = "forestgreen")
+boxplot(diameter[age=='M'], main=("Abalone Dataset \n Middle Age Abalone"), col = "forestgreen")
+boxplot(diameter[age=='O'], main=("Abalone Dataset \n Old Abalone"), col = "forestgreen")
+boxplot(diameter, main=("Abalone Dataset \n All instances Abalone"), col = "forestgreen")
+
+#subsetting only the old abalone and excluding the nominal variables.
+oldData<-HAbalone[which(HAbalone$age=='M'),]
+oldData$sex<-oldData$age<-oldData$rings<-NULL
+
+#subsetting only the young abalone and excluding the nominal variables.
+youngdataHAbalone[which(HAbalone$age=='Y'),]
+youngdata$sex<-youngdata$age<-youngdata$rings<-NULL
+
+#creating the starplots:
+stars(youngdata[1:10,], main = "Young Abalone Starplot", draw.segments = TRUE, frame.plot = TRUE, len = 1.2)
+stars(oldData[1:10,], main = "Old Abalone Starplot", draw.segments = TRUE, frame.plot = TRUE, len = 1.2)
