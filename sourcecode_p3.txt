@@ -1,0 +1,54 @@
+//data that will be used 
+complex9<-read.csv("C:/Users/Sebz/Desktop/Sebas/Colegio/COSC4335/Assignment 4/complex9.csv")
+
+
+//required packages
+install.packages("DMwR")
+library("DMwR", lib.loc="~/R/win-library/3.0")
+
+
+//using the function 
+lof.scores5<-lofactor(complex9[1:2], 5)
+lof.scores6<-lofactor(complex9[1:2], 6)
+lof.scores7<-lofactor(complex9[1:2], 7)
+lof.scores8<-lofactor(complex9[1:2], 8)
+lof.scores9<-lofactor(complex9[1:2], 9)
+lof.scores10<-lofactor(complex9[1:2], 10)
+lof.scores11<-lofactor(complex9[1:2], 11)
+lof.scores12<-lofactor(complex9[1:2], 12)
+lof.scores13<-lofactor(complex9[1:2], 13)
+lof.scores14<-lofactor(complex9[1:2], 14)
+lof.scores15<-lofactor(complex9[1:2], 15)
+
+
+
+
+//adding the scored as a new row of data
+complex9$lof<-lof.scores10
+
+//add new column to the dataset with OLS
+complex9$ols<-(complex9$lof-min(complex9$lof))/(max(complex9$lof)-min(complex9$lof))
+ccomplex9$ols<-omplex9$ols*100
+
+//ordering the data according to the OLS value 
+complex9<-complex9[order(complex9$ols),]
+
+//remove outlierfacor column 
+complex9$lof<-NULL
+
+//graphs
+//same graphs were ran for other values of K
+> plot(complex9[1:65, 1:2], col = complex9$class[1:65])
+> plot(complex9[65:3273, 1:2], col = complex9$class[65:3273])
+
+> plot(complex9[1:164, 1:2], col = complex9$class[1:164])
+> plot(complex9[164:3273, 1:2], col = complex9$class[164:3273])
+
+> plot(complex9[1:327, 1:2], col = complex9$class[1:327])
+> plot(complex9[327:3273, 1:2], col = complex9$class[327:3273])
+
+
+//histogram
+hist(complex9$ols[1:327], breaks=20, col = topo.colors(20), main = "Top 10% Outliers", xlab = "Outlier Score")
+
+
