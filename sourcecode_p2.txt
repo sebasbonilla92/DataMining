@@ -1,0 +1,142 @@
+//upload data
+adultData<-read.csv("C:/Users/Sebz/Desktop/Sebas/Colegio/COSC4335/Assignment 2/SAdult.csv")
+complex9<-read.csv("C:/Users/Sebz/Desktop/Sebas/Colegio/COSC4335/Assignment 2/complex9.csv")
+
+
+//normalization of continuous variables.(SADULT)
+x1<-(adultData$age - mean(adultData$age))/sd(adultData$age)
+adultData$age<-x1
+x2<-(adultData$fnlwgt - mean(adultData$fnlwgt))/sd(adultData$fnlwgt)
+adultData$fnlwgt<-x2
+x3<-(adultData$education - mean(adultData$education))/sd(adultData$education)
+adultData$education<-x3
+x4<-(adultData$hour.per.week - mean(adultData$hour.per.week))/sd(adultData$hour.per.week)
+adultData$hour.per.week<-x4
+x5<-(adultData$nMarital - mean(adultData$nMarital))/sd(adultData$nMarital)
+adultData$maritalstatus <- x5
+x6<-(adultData$nRace - mean(adultData$nRace))/sd(adultData$nRace)
+adultData$race <- x6
+x7<-(adultData$nSex - mean(adultData$nSex))/sd(adultData$nSex)
+adultData$sex <- x7
+
+adultData2$nMarital = NULL
+adultData2$nRace = NULL
+adultData2$nSex = NULL
+
+//normalization of continuous variables (COMPLEX9)
+x1<-(complex9$x - mean(complex9$x))/sd(complex9$x)
+complex9$x<-x1
+y1<-(complex9$y - mean(complex9$y))/sd(complex9$y)
+complex9$y<-y1
+
+//function
+function(a,b){
+    w<-1/7
+    res<-w*abs(a$age-b$age)+w*abs(a$fnlwgt-b$fnlwgt)
+    res2<-w*abs(a$education - b$education)+w*abs(a$maritalstatus-b$maritalstatus)
+    res3<-w*abs(a$race - b$race)+ w*abs(a$hour.per.week - b$hour.per.week)
+    res4<-w*abs(a$sex-b$sex)
+    
+    resf<-(res+res2+res3+res4)
+    return(resf)
+}
+
+//using the funtion
+adist(copyadu[1,],copyadu[2,])
+
+//matrix function:
+creatadist<-function(){
+    ans = matrix(,nrow = 10, ncol = 10)
+    for (i in 1:10){
+        for(j in 1:10){
+            ans[i,j]<-c(adist(copyadu[i,],copyadu[j,]))
+        }
+    }
+    return(ans)
+}
+
+
+//running k means 
+km8<-kmeans(complex9[1:2], 8)
+km82<-kmeans(complex9[1:2], 8)
+km11<-kmeans(complex9[1:2], 11)
+km112<-kmeans(complex9[1:2], 11)
+
+//plotting it 
+plot(complex9[1:2], col= km8$cluster)
+plot(complex9[1:2], col= km82$cluster)
+plot(complex9[1:2], col= km11$cluster)
+plot(complex9[1:2], col= km112$cluster)
+
+
+//tables for cluster purity
+t1<-table(complex9[,3], km8$cluster)
+t2<-table(complex9[,3], km82$cluster)
+t3<-table(complex9[,3], km11$cluster)
+t4<-table(complex9[,3], km112$cluster)
+
+//Running K means using PAM 
+ak3<-pam(adultData2, 3)
+ak5<-pam(adultData2, 5)
+ak7<-pam(adultData2, 7)
+
+//getting PAM cluster size
+ak3$clusinfo
+ak5$clusinfo
+ak7$clusinfo
+
+//tables for cluster purity
+t1km3<-table(adultData[,8], ak3$clustering)
+t5km5<-table(adultData[,8], ak5$clustering)
+t5km7<-table(adultData[,8], ak7$clustering)
+
+
+//dbscan
+for (i in 5:15){
+db<-dbscan(complex9[1:2], i)
+}
+b12<-dbscan(complex9[1:2], 12)
+table(complex9[,3], db4$cluster)
+
+c1<-dbscan(adultData[1:7], 2.8, 3)
+table(adultdata[8,] c1$cluster)
+
+
+//Decision tree
+fit<-rpart(fm, method = "class", data = adultData[1:300,])
+p3<-predict(fit, adultData[300:600,], type="class")
+rpart.plot::rpart.plot(fit)
+table(adultData[300:600,8], predicted=p3)
+
+
+
+//agreement function
+agreement<-function(X, Y){
+    
+    n<-length(X$cluster)
+    counter<-0
+    i<-1
+    j<-1
+    for(i in 1:n){
+        for(j in 1:n){
+            if(j!=i){
+                if((X$cluster[j]==X$cluster[i] && Y$cluster[j] == Y$cluster[i]) || X$cluster[j]!=X$cluster[i] && Y$cluster[j]!=Y$cluster[i]){
+                    counter = counter +1
+                }
+            }
+            else{
+                if((X$cluster[i]==0 && X$cluster[j]==0) || (X$cluster[i]>0 && X$cluster[j]>0)){
+                    
+                    counter = counter + 1
+                }    
+                
+            }
+        }
+    }
+    
+    return(counter/((n*(n+1)/2)))
+}
+
+
+
+
